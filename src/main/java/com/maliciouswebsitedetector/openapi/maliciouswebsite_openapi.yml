@@ -37,9 +37,9 @@ paths:
               schema:
                 type: string
           examples:
-            Example1:
+            Not Malicious:
               value: "The website 'example.com' is not malicious."
-            Example2:
+            Likely Malicious:
               value: "The website 'malicious.com' is likely malicious."
         '500':
           description: Internal server error
