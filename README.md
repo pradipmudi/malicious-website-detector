@@ -18,3 +18,7 @@ A lightweight malicious website detector using bloom filter
 ## API contract:
 Checkout the API contract here to test the code:
 [MaliciousWebsiteDetector OpenAPI Contract - Swagger UI](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/pradipmudi/malicious-website-detector/main/src/main/java/com/maliciouswebsitedetector/openapi/maliciouswebsite_openapi.yml)
+
+## Blog
+In this blog I discuss in detail the advantages we get using bloom filters.
+https://pradipmudi.substack.com/p/understanding-bloom-filters
