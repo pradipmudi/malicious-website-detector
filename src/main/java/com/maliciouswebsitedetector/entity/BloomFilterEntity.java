@@ -2,22 +2,34 @@ package com.maliciouswebsitedetector.entity;
 
 import jakarta.persistence.*;
 
-
 @Entity
+@IdClass(BloomFilterKey.class)
 public class BloomFilterEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    @Id
+    private int size;
+
+    @Id
+    private int hashCount;
+
+    @Lob
     @Column(columnDefinition = "BLOB")
     private byte[] bitArray;
 
-    public Long getId() {
-        return id;
+    public int getSize() {
+        return size;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getHashCount() {
+        return hashCount;
+    }
+
+    public void setHashCount(int hashCount) {
+        this.hashCount = hashCount;
     }
 
     public byte[] getBitArray() {
@@ -28,4 +40,3 @@ public class BloomFilterEntity {
         this.bitArray = bitArray;
     }
 }
-

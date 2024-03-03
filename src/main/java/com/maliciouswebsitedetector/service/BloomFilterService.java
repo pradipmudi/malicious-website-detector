@@ -1,6 +1,8 @@
 package com.maliciouswebsitedetector.service;
 
+import com.maliciouswebsitedetector.config.BloomFilterConfig;
 import com.maliciouswebsitedetector.entity.BloomFilterEntity;
+import com.maliciouswebsitedetector.entity.BloomFilterKey;
 import com.maliciouswebsitedetector.repository.BloomFilterRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,27 +21,30 @@ public class BloomFilterService {
      *
      */
     private BitSet bitArray; // BitSet to represent the Bloom Filter efficiently
-    private int size;
-    private final int hashCount;
+    private int bloomFilterSize;
+    private int hashCount;
     private final BloomFilterRepository bloomFilterRepository;
+    private final BloomFilterConfig bloomFilterConfig;
 
     @Autowired
-    public BloomFilterService(BloomFilterRepository bloomFilterRepository) {
+    public BloomFilterService(BloomFilterRepository bloomFilterRepository, BloomFilterConfig bloomFilterConfig) {
         this.bloomFilterRepository = bloomFilterRepository;
-        hashCount = 5;
+        this.bloomFilterConfig = bloomFilterConfig;
+        this.hashCount = bloomFilterConfig.getHashCount();
+        this.bloomFilterSize = bloomFilterConfig.getSize();
         loadFromDatabase(); // Load Bloom Filter data from the database on application startup
     }
 
     private void loadFromDatabase() {
-        Optional<BloomFilterEntity> optionalEntity = bloomFilterRepository.findById(1L);
+        Optional<BloomFilterEntity> optionalEntity = bloomFilterRepository.findById(new BloomFilterKey(bloomFilterSize, hashCount));
         if (optionalEntity.isPresent()) {
             BloomFilterEntity bloomFilterEntity = optionalEntity.get();
             this.bitArray = BitSet.valueOf(bloomFilterEntity.getBitArray());
-            this.size = this.bitArray.size();
+            this.bloomFilterSize = bloomFilterEntity.getSize();
+            this.hashCount = bloomFilterEntity.getHashCount();
         } else {
             // Initialize with default values if no data found in the database
-            this.bitArray = new BitSet(1000); // Default size
-            this.size = 1000;
+            this.bitArray = new BitSet(bloomFilterSize); // Default size
         }
     }
 
@@ -47,22 +52,23 @@ public class BloomFilterService {
     public void saveToDatabase() {
         byte[] bitArrayBytes = bitArray.toByteArray();
         BloomFilterEntity bloomFilterEntity = new BloomFilterEntity();
-        bloomFilterEntity.setId(1L); // Fixed ID for simplicity
+        bloomFilterEntity.setSize(bloomFilterSize);
+        bloomFilterEntity.setHashCount(hashCount);// Fixed ID for simplicity
         bloomFilterEntity.setBitArray(bitArrayBytes);
         bloomFilterRepository.save(bloomFilterEntity);
     }
 
     public synchronized void add(String website) {
-        for (int ii = 0; ii < this.hashCount; ii++) {
-            int index = Math.abs(website.hashCode() * ii) % this.size;
+        for (int hash = 0; hash < this.hashCount; hash++) {
+            int index = Math.abs(website.hashCode() * hash) % this.bloomFilterSize;
             bitArray.set(index, true);
         }
         saveToDatabase(); // Save Bloom Filter data to the database after each addition
     }
 
     public boolean contains(String website) {
-        for (int ii = 0; ii < this.hashCount; ii++) {
-            int index = Math.abs(website.hashCode() * ii) % this.size;
+        for (int hash = 0; hash < this.hashCount; hash++) {
+            int index = Math.abs(website.hashCode() * hash) % this.bloomFilterSize;
             if (!bitArray.get(index)) {
                 return false;
             }

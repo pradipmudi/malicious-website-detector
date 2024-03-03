@@ -1,0 +1,16 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: expensys
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/bloomfilter
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+bloomfilter:
+  size: 1000 # Default size of the Bloom Filter
+  hashcount: 5 # Number of hash functions to apply
