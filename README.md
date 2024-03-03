@@ -14,3 +14,7 @@ A lightweight malicious website detector using bloom filter
 - **Add malicious websites in the bloom filter** using the `/add` endpoint
 
 - **Malicious Website Detector:** Utilize the `/check` endpoint to quickly identify malicious websites
+
+## API contract:
+Checkout the API contract here to test the code:
+[MaliciousWebsiteDetector OpenAPI Contract - Swagger UI](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/pradipmudi/malicious-website-detector/main/src/main/java/com/maliciouswebsitedetector/openapi/maliciouswebsite_openapi.yml)
