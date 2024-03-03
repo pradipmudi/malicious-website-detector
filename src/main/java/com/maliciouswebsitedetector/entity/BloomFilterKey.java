@@ -9,6 +9,10 @@ public class BloomFilterKey implements Serializable {
 
     private int hashCount;
 
+    public BloomFilterKey() {
+        // Default constructor required by Hibernate
+    }
+
     public BloomFilterKey(int size, int hashCount) {
         this.size = size;
         this.hashCount = hashCount;

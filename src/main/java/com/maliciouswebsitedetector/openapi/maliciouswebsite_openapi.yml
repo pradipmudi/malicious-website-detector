@@ -16,8 +16,10 @@ paths:
             schema:
               type: string
       responses:
-        '200':
-          description: Success
+        '201':
+          description: Website added to the Bloom Filter successfully
+        '500':
+          description: Internal server error
   /bloomfilter/check:
     get:
       summary: Check if a website is likely malicious
@@ -33,4 +35,11 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
+                type: string
+          examples:
+            Example1:
+              value: "The website 'example.com' is not malicious."
+            Example2:
+              value: "The website 'malicious.com' is likely malicious."
+        '500':
+          description: Internal server error
