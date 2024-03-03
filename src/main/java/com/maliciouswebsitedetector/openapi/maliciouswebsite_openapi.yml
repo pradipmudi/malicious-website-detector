@@ -8,7 +8,7 @@ servers:
 paths:
   /bloomfilter/add:
     post:
-      summary: Add a website to the Bloom Filter
+      summary: Add a malicious website to the Bloom Filter
       requestBody:
         required: true
         content:
@@ -31,15 +31,15 @@ paths:
             type: string
       responses:
         '200':
-          description: Success
+          description: Message indicating the website's maliciousness
           content:
             application/json:
               schema:
                 type: string
-          examples:
-            Not Malicious:
-              value: "The website 'example.com' is not malicious."
-            Likely Malicious:
-              value: "The website 'malicious.com' is likely malicious."
+              examples:
+                NotMalicious:
+                  value: "The website 'benign1.com' is not malicious."
+                Malicious:
+                  value: "The website 'malicious1.com' is likely malicious."
         '500':
           description: Internal server error
